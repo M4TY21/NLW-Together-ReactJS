@@ -1,6 +1,8 @@
-import illustrationImg from "../assets/illustration.svg";
-import logoImg from "../assets/logo.svg";
-import googleIcon from "../assets/google-icon.svg";
+import {
+	IllustrationImg,
+	LogoImg,
+	GoogleImg,
+} from "../assets";
 
 import "../styles/auth.scss";
 
@@ -9,7 +11,7 @@ export function Home() {
 		<div id='page-auth'>
 			<aside>
 				<img
-					src={illustrationImg}
+					src={IllustrationImg}
 					alt='Ilustração apresentando a aplicação de perguntas e respostas'
 				/>
 				<strong>Toda pergunta tem uma resposta.</strong>
@@ -19,24 +21,25 @@ export function Home() {
 				</p>
 			</aside>
 			<main>
-				<div id='main-content'>
-					<img src={logoImg} alt='LetMeAsk Logo' />
-					<button>
+				<div className='main-content'>
+					<img src={LogoImg} alt='LetMeAsk Logo' />
+					<button className='create-rom'>
 						<img
-							src={googleIcon}
+							src={GoogleImg}
 							alt='Botão para Autenticação com o Google'
 						/>
 						Crie sua sala com o Google
 					</button>
-					<div>
-						<form>
-							<input
-								type='text'
-								placeholder='Digite o código da sala'
-							/>
-							<button type='submit'>Entrar na sala</button>
-						</form>
+					<div className='separator'>
+						ou entre em uma sala
 					</div>
+					<form>
+						<input
+							type='text'
+							placeholder='Digite o código da sala'
+						/>
+						<button type='submit'>Entrar na sala</button>
+					</form>
 				</div>
 			</main>
 		</div>
