@@ -1,3 +1,10 @@
+import { useNavigate } from "react-router-dom";
+import { auth } from "../services/firebase";
+import {
+	GoogleAuthProvider,
+	signInWithPopup,
+} from "firebase/auth";
+
 import {
 	IllustrationImg,
 	LogoImg,
@@ -9,6 +16,21 @@ import { Button } from "../components/Button";
 import "../styles/auth.scss";
 
 export function Home() {
+	const navigate = useNavigate();
+
+	function handleCreateRoom() {
+		const provider = new GoogleAuthProvider();
+
+		signInWithPopup(auth, provider).then((result) => {
+			try {
+				const user = result.user;
+				console.log(user);
+				navigate("/rooms/new");
+			} catch (error) {
+				console.log(error);
+			}
+		});
+	}
 	return (
 		<div id='page-auth'>
 			<aside>
@@ -25,7 +47,10 @@ export function Home() {
 			<main>
 				<div className='main-content'>
 					<img src={LogoImg} alt='LetMeAsk Logo' />
-					<button className='create-rom'>
+					<button
+						className='create-rom'
+						onClick={handleCreateRoom}
+					>
 						<img
 							src={GoogleImg}
 							alt='Botão para Autenticação com o Google'
