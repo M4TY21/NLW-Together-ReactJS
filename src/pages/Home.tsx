@@ -1,5 +1,5 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 import {
 	IllustrationImg,
@@ -9,14 +9,11 @@ import {
 
 import { Button } from "../components/Button";
 
-import { AuthContext } from "../App";
-
 import "../styles/auth.scss";
 
 export function Home() {
 	const navigate = useNavigate();
-	const { user, signInWithGoogle } =
-		useContext(AuthContext);
+	const { user, signInWithGoogle } = useAuth();
 
 	async function handleCreateRoom() {
 		if (!user) {
@@ -24,6 +21,7 @@ export function Home() {
 		}
 		navigate("/rooms/new");
 	}
+
 	return (
 		<div id='page-auth'>
 			<aside>
