@@ -10,6 +10,7 @@ import {
 	signInWithPopup,
 	onAuthStateChanged,
 } from "firebase/auth";
+
 import { auth } from "../services/firebase";
 
 type User = {

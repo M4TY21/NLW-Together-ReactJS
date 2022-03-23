@@ -1,14 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
 import { FormEvent, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { database } from "../services/firebase";
+import { ref, set } from "firebase/database";
+import { useAuth } from "../hooks/useAuth";
 
 import { IllustrationImg, LogoImg } from "../assets";
 
 import { Button } from "../components/Button";
-import { useAuth } from "../hooks/useAuth";
 
 import "../styles/auth.scss";
-import { database } from "../services/firebase";
-import { ref, set } from "firebase/database";
 
 export function NewRoom() {
 	const { user } = useAuth();
@@ -22,16 +23,14 @@ export function NewRoom() {
 			return;
 		}
 
-		const roomId = Math.floor(
-			Date.now() * Math.random()
-		).toString(36);
+		const firebaseRoom = ref(database, `rooms/${user?.id}`);
 
-		set(ref(database, `rooms/${roomId}`), {
+		await set(firebaseRoom, {
 			title: newRoom,
 			authorId: user?.id,
 		});
 
-		navigate(`/rooms/${roomId}`);
+		navigate(`/rooms/${firebaseRoom.key}`);
 	}
 
 	return (
@@ -64,7 +63,7 @@ export function NewRoom() {
 					</form>
 					<p>
 						Quer entrar em uma sala existente?{" "}
-						<Link to='/'>clique aqui</Link>
+						<Link to='/'>clique aqui</Link>.
 					</p>
 				</div>
 			</main>
