@@ -1,4 +1,6 @@
-import { CopyImg } from "../assets";
+import { CopyImg } from "../../assets";
+
+import "./styles.scss";
 
 export function RoomCode() {
 	return (
@@ -6,6 +8,7 @@ export function RoomCode() {
 			<div>
 				<img src={CopyImg} alt='Copiar codigo da sala' />
 			</div>
+			<span>Sala </span>
 		</button>
 	);
 }

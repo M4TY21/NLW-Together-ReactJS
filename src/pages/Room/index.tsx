@@ -1,9 +1,9 @@
-import { LogoImg } from "../assets";
+import { LogoImg } from "../../assets";
 
-import { Button } from "../components/Button";
-import { RoomCode } from "../components/RoomCode";
+import { Button } from "../../components/Button";
+import { RoomCode } from "../../components/RoomCode";
 
-import "../styles/room.scss";
+import "./styles.scss";
 
 export function Room() {
 	return (
