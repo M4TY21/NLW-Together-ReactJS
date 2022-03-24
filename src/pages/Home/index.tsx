@@ -62,7 +62,7 @@ export function Home() {
 				<div className='main-content'>
 					<img src={LogoImg} alt='LetMeAsk Logo' />
 					<button
-						className='create-rom'
+						className='create-room'
 						onClick={handleCreateRoom}
 					>
 						<img
