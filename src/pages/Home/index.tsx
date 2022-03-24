@@ -2,8 +2,8 @@ import { FormEvent, useState } from "react";
 
 import { database } from "../../services/firebase";
 import { useNavigate } from "react-router-dom";
-import { ref, get } from "firebase/database";
 import { useAuth } from "../../hooks/useAuth";
+import { ref, get } from "firebase/database";
 
 import {
 	IllustrationImg,
@@ -24,6 +24,7 @@ export function Home() {
 		if (!user) {
 			await signInWithGoogle();
 		}
+
 		navigate("/rooms/new");
 	}
 
@@ -45,6 +46,7 @@ export function Home() {
 
 		navigate(`/rooms/${roomCode}`);
 	}
+
 	return (
 		<div id='page-auth'>
 			<aside>

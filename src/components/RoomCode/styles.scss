@@ -11,7 +11,7 @@
 
 	div {
 		background: #835afd;
-		padding: 0 12px;
+		padding: 0 10px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -20,5 +20,10 @@
 	span {
 		display: block;
 		align-self: center;
+		flex: 1;
+		padding: 0 16px 0 12px;
+		width: 245px;
+		font-size: 14px;
+		font-weight: 500;
 	}
 }
