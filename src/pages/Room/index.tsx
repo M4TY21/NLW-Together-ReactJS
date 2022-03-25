@@ -95,8 +95,16 @@ export function Room() {
 			isAnswered: false,
 		};
 
+		let ID = "";
+		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		for (var i = 0; i < 12; i++) {
+			ID += characters.charAt(
+				Math.floor(Math.random() * 36)
+			);
+		}
+
 		await set(
-			ref(database, `rooms/${roomId}/questions/${user.id}`),
+			ref(database, `rooms/${roomId}/questions/${ID}`),
 			question
 		);
 
@@ -116,7 +124,10 @@ export function Room() {
 				<div className='room-title'>
 					<h1>Sala {title}</h1>
 					{questions.length > 0 && (
-						<span>{questions.length} pergunta</span>
+						<span>
+							{questions.length} pergunta
+							{questions.length < 2 ? "" : "s"}
+						</span>
 					)}
 				</div>
 
