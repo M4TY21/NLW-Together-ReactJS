@@ -9,6 +9,7 @@ import { LogoImg } from "../../assets";
 
 import { Button } from "../../components/Button";
 import { RoomCode } from "../../components/RoomCode";
+import { Questions } from "../../components/Question";
 
 import "./styles.scss";
 
@@ -16,63 +17,11 @@ type RoomParams = {
 	id: string | undefined;
 };
 
-type FirebaseQuestions = Record<
-	string,
-	{
-		author: {
-			name: string;
-			avatar: string;
-		};
-		content: string;
-		isHighlighted: boolean;
-		isAnswered: boolean;
-	}
->;
-
-type Question = {
-	id: string;
-	author: {
-		name: string;
-		avatar: string;
-	};
-	content: string;
-	isHighlighted: boolean;
-	isAnswered: boolean;
-};
-
 export function Room() {
 	const { user } = useAuth();
 	const params = useParams<RoomParams>();
 	const roomId = params.id;
-	const [newQuestion, setNewQuestion] = useState("");
-	const [questions, setQuestions] = useState<Question[]>(
-		[]
-	);
 	const [title, setTitle] = useState("");
-
-	useEffect(() => {
-		const roomRef = ref(database, `rooms/${roomId}`);
-
-		onValue(roomRef, (room) => {
-			const databaseRoom = room.val();
-			const firebaseQuestions: FirebaseQuestions =
-				databaseRoom.questions ?? {};
-			const parsedQuestions = Object.entries(
-				firebaseQuestions
-			).map(([key, value]) => {
-				return {
-					id: key,
-					content: value.content,
-					author: value.author,
-					isHighlighted: value.isHighlighted,
-					isAnswered: value.isAnswered,
-				};
-			});
-
-			setTitle(databaseRoom.title);
-			setQuestions(parsedQuestions);
-		});
-	}, [roomId]);
 
 	async function handleSendQuestion(event: FormEvent) {
 		event.preventDefault();
@@ -145,7 +94,7 @@ export function Room() {
 							<div className='user-info'>
 								<img
 									src={user.avatar}
-									alt={`avatar de ${user.id}`}
+									alt={`avatar de usuário ${user.name}`}
 								/>
 								<span>{user.name}</span>
 							</div>
@@ -160,6 +109,17 @@ export function Room() {
 						</Button>
 					</div>
 				</form>
+				<div className='question-list'>
+					{questions.map((question) => {
+						return (
+							<Questions
+								key={question.id}
+								content={question.content}
+								author={question.author}
+							/>
+						);
+					})}
+				</div>
 			</main>
 		</div>
 	);
