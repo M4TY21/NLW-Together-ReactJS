@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { database } from "../services/firebase";
-import { onValue } from "firebase/database";
+import { onValue, ref } from "firebase/database";
 
 type Question = {
 	id: string;
@@ -27,7 +27,8 @@ type FirebaseQuestions = Record<
 	}
 >;
 
-export function useRoom() {
+export function useRoom(roomId: string) {
+	const [title, setTitle] = useState("");
 	const [newQuestion, setNewQuestion] = useState("");
 	const [questions, setQuestions] = useState<Question[]>(
 		[]
@@ -56,4 +57,6 @@ export function useRoom() {
 			setQuestions(parsedQuestions);
 		});
 	}, [roomId]);
+
+	return { questions, title };
 }
