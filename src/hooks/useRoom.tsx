@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import { database } from "../services/firebase";
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, set } from "firebase/database";
+import { useAuth } from "./useAuth";
 
 type Question = {
 	id: string;
@@ -28,11 +29,49 @@ type FirebaseQuestions = Record<
 >;
 
 export function useRoom(roomId: string) {
+	const { user } = useAuth();
 	const [title, setTitle] = useState("");
 	const [newQuestion, setNewQuestion] = useState("");
 	const [questions, setQuestions] = useState<Question[]>(
 		[]
 	);
+
+	async function handleSendQuestion(event: FormEvent) {
+		event.preventDefault();
+
+		if (newQuestion.trim() === "") {
+			return;
+		}
+
+		if (!user) {
+			throw new Error("You must be logged in");
+		}
+
+		const question = {
+			content: newQuestion,
+			author: {
+				name: user.name,
+				avatar: user.avatar,
+			},
+			isHighlighted: false,
+			isAnswered: false,
+		};
+
+		let ID = "";
+		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		for (var i = 0; i < 12; i++) {
+			ID += characters.charAt(
+				Math.floor(Math.random() * 36)
+			);
+		}
+
+		await set(
+			ref(database, `rooms/${roomId}/questions/${ID}`),
+			question
+		);
+
+		setNewQuestion("");
+	}
 
 	useEffect(() => {
 		const roomRef = ref(database, `rooms/${roomId}`);
@@ -58,5 +97,5 @@ export function useRoom(roomId: string) {
 		});
 	}, [roomId]);
 
-	return { questions, title };
+	return { questions, title, handleSendQuestion };
 }
