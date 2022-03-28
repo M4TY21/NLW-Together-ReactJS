@@ -1,7 +1,7 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { database } from "../services/firebase";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref, off } from "firebase/database";
 import { useAuth } from "./useAuth";
 
 type Question = {
@@ -25,58 +25,26 @@ type FirebaseQuestions = Record<
 		content: string;
 		isHighlighted: boolean;
 		isAnswered: boolean;
+		likes: Record<
+			string,
+			{
+				authorId: string;
+			}
+		>;
 	}
 >;
 
 export function useRoom(roomId: string) {
 	const { user } = useAuth();
 	const [title, setTitle] = useState("");
-	const [newQuestion, setNewQuestion] = useState("");
 	const [questions, setQuestions] = useState<Question[]>(
 		[]
 	);
 
-	async function handleSendQuestion(event: FormEvent) {
-		event.preventDefault();
-
-		if (newQuestion.trim() === "") {
-			return;
-		}
-
-		if (!user) {
-			throw new Error("You must be logged in");
-		}
-
-		const question = {
-			content: newQuestion,
-			author: {
-				name: user.name,
-				avatar: user.avatar,
-			},
-			isHighlighted: false,
-			isAnswered: false,
-		};
-
-		let ID = "";
-		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		for (var i = 0; i < 12; i++) {
-			ID += characters.charAt(
-				Math.floor(Math.random() * 36)
-			);
-		}
-
-		await set(
-			ref(database, `rooms/${roomId}/questions/${ID}`),
-			question
-		);
-
-		setNewQuestion("");
-	}
-
 	useEffect(() => {
 		const roomRef = ref(database, `rooms/${roomId}`);
 
-		onValue(roomRef, (room) => {
+    const unsubscribe = onValue(roomRef, (room) => {
 			const databaseRoom = room.val();
 			const firebaseQuestions: FirebaseQuestions =
 				databaseRoom.questions ?? {};
@@ -89,13 +57,22 @@ export function useRoom(roomId: string) {
 					author: value.author,
 					isHighlighted: value.isHighlighted,
 					isAnswered: value.isAnswered,
+					likeCount: Object.values(value.likes ?? {})
+						.length,
+					hasLinked: Object.values(value.likes ?? {}).some(
+						(like) => like.authorId === user?.id
+					),
 				};
 			});
 
 			setTitle(databaseRoom.title);
 			setQuestions(parsedQuestions);
 		});
-	}, [roomId]);
 
-	return { questions, title, handleSendQuestion };
+    return {
+      ref.off('value', unsubscribe)
+    }
+	}, [roomId, user?.id]);
+
+	return { questions, title };
 }
