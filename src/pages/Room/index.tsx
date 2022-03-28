@@ -10,7 +10,7 @@ import { LogoImg } from "../../assets";
 
 import { Button } from "../../components/Button";
 import { RoomCode } from "../../components/RoomCode";
-import { Questions } from "../../components/Questions";
+import { Question } from "../../components/Question";
 
 import "./styles.scss";
 
@@ -128,20 +128,26 @@ export function Room() {
 				<div className='question-list'>
 					{questions.map((question) => {
 						return (
-							<Questions
+							<Question
 								key={question.id}
 								content={question.content}
 								author={question.author}
 							>
 								<button
-									className='like-button'
+									className={`${
+										question.hasLiked
+											? "like-button"
+											: "liked"
+									}`}
 									type='button'
 									aria-label='Marcar como gostei'
 									onClick={() =>
 										handleLikeQuestion(question.id)
 									}
 								>
-									<span>15</span>
+									{question.likeCount > 0 && (
+										<span>{question.likeCount}</span>
+									)}
 									<svg
 										width='24'
 										height='24'
@@ -158,7 +164,7 @@ export function Room() {
 										/>
 									</svg>
 								</button>
-							</Questions>
+							</Question>
 						);
 					})}
 				</div>

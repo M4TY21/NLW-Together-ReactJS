@@ -1,7 +1,7 @@
 .question {
 	background: #fefefe;
 	border-radius: 8px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.84);
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 	padding: 24px;
 
 	& + .question {
@@ -36,7 +36,7 @@
 		}
 
 		button {
-			border: 0px;
+			border: 0;
 			background: transparent;
 			cursor: pointer;
 			transition: filter 0.2s;
@@ -47,17 +47,24 @@
 				color: #737380;
 				gap: 8px;
 
-				&.liked {
-					color: #835afd;
-
-					svg path {
-						stroke: #835afd;
-					}
+				svg path {
+					stroke: #737380;
 				}
+			}
 
-				&:hover {
-					filter: brightness(0.7);
+			&.liked {
+				display: flex;
+				align-items: flex-end;
+				gap: 8px;
+				color: #835afd;
+
+				svg path {
+					stroke: #835afd;
 				}
+			}
+
+			&:hover {
+				filter: brightness(0.7);
 			}
 		}
 	}

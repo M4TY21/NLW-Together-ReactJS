@@ -11,19 +11,20 @@ type QuestionProps = {
 	children?: ReactNode;
 };
 
-export function Questions(props: QuestionProps) {
+export function Question({
+	content,
+	author,
+	children,
+}: QuestionProps) {
 	return (
 		<div className='question'>
-			<p>{props.content}</p>
+			<p>{content}</p>
 			<footer>
 				<div className='user-info'>
-					<img
-						src={props.author.avatar}
-						alt={`Avatar do usuário ${props.author.name}`}
-					/>
-					<span>{props.author.name}</span>
+					<img src={author.avatar} alt={author.name} />
+					<span>{author.name}</span>
 				</div>
-				<div>{props.children}</div>
+				<div>{children}</div>
 			</footer>
 		</div>
 	);

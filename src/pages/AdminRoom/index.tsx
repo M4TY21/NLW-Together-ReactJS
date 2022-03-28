@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { LogoImg } from "../../assets";
 
-import { Questions } from "../../components/Questions";
+import { Question } from "../../components/Question";
 import { RoomCode } from "../../components/RoomCode";
 import { Button } from "../../components/Button";
 
@@ -46,7 +46,7 @@ export function AdminRoom() {
 				<div className='question-list'>
 					{questions.map((question) => {
 						return (
-							<Questions
+							<Question
 								key={question.id}
 								content={question.content}
 								author={question.author}
