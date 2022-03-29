@@ -4,7 +4,7 @@ import { database } from "../../services/firebase";
 import { useAuth } from "../../hooks/useAuth";
 import { useRoom } from "../../hooks/useRoom";
 import { useParams } from "react-router-dom";
-import { ref, set } from "firebase/database";
+import { ref, remove, set } from "firebase/database";
 
 import { LogoImg } from "../../assets";
 
@@ -64,16 +64,28 @@ export function Room() {
 		setNewQuestion("");
 	}
 
-	async function handleLikeQuestion(questionId: string) {
-		await set(
-			ref(
-				database,
-				`rooms/${roomId}/questions/${questionId}/likes`
-			),
-			{
-				authorId: user?.id,
-			}
-		);
+	async function handleLikeQuestion(
+		questionId: string,
+		likeId: string | undefined
+	) {
+		if (likeId) {
+			await remove(
+				ref(
+					database,
+					`rooms/${roomId}/questions/${questionId}/likes/${likeId}`
+				)
+			);
+		} else {
+			await set(
+				ref(
+					database,
+					`rooms/${roomId}/questions/${questionId}/likes/${likeId}`
+				),
+				{
+					authorId: user?.id,
+				}
+			);
+		}
 	}
 
 	return (
@@ -135,14 +147,17 @@ export function Room() {
 							>
 								<button
 									className={`${
-										question.hasLiked
-											? "like-button"
-											: "liked"
+										question.likeId
+											? "liked"
+											: "like-button"
 									}`}
 									type='button'
 									aria-label='Marcar como gostei'
 									onClick={() =>
-										handleLikeQuestion(question.id)
+										handleLikeQuestion(
+											question.id,
+											question.likeId
+										)
 									}
 								>
 									{question.likeCount > 0 && (
