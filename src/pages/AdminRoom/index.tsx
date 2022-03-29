@@ -1,7 +1,12 @@
 import { useRoom } from "../../hooks/useRoom";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { LogoImg, DeleteImg } from "../../assets";
+import {
+	LogoImg,
+	DeleteImg,
+	CheckImg,
+	AnswerImg,
+} from "../../assets";
 
 import { Question } from "../../components/Question";
 import { RoomCode } from "../../components/RoomCode";
@@ -46,6 +51,34 @@ export function AdminRoom() {
 		}
 	}
 
+	async function handleCheckQuestionAsAnswered(
+		questionId: string
+	) {
+		await update(
+			ref(
+				database,
+				`rooms/${roomId}/questions/${questionId}`
+			),
+			{
+				isAnswered: true,
+			}
+		);
+	}
+
+	async function handleHighlightQuestion(
+		questionId: string
+	) {
+		await update(
+			ref(
+				database,
+				`rooms/${roomId}/questions/${questionId}`
+			),
+			{
+				isHighlighted: true,
+			}
+		);
+	}
+
 	return (
 		<div id='page-room'>
 			<header>
@@ -78,7 +111,37 @@ export function AdminRoom() {
 								key={question.id}
 								content={question.content}
 								author={question.author}
+								isAnswered={question.isAnswered}
+								isHighlighted={question.isHighlighted}
 							>
+								{!question.isAnswered && (
+									<>
+										<button
+											type='button'
+											onClick={() =>
+												handleCheckQuestionAsAnswered(
+													question.id
+												)
+											}
+										>
+											<img
+												src={CheckImg}
+												alt='marcar questão respondida'
+											/>
+										</button>
+										<button
+											type='button'
+											onClick={() =>
+												handleHighlightQuestion(question.id)
+											}
+										>
+											<img
+												src={AnswerImg}
+												alt='Dar destaque à pergunta'
+											/>
+										</button>
+									</>
+								)}
 								<button
 									type='button'
 									onClick={() =>
